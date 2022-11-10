@@ -1,12 +1,12 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Home } from '../pages/Home';
 import { History } from '../pages/History';
-import { Default } from '../layouts/Default';
+import { DefaultLayout } from '../layouts/DefaultLayout';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Default />,
+    element: <DefaultLayout />,
     children: [
       {
         path: '/',
