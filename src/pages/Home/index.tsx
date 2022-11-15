@@ -2,6 +2,7 @@ import { Play } from 'phosphor-react';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 
 import {
   Container,
@@ -25,7 +26,18 @@ const newCycleFormSchema = zod.object({
 // infer types given the schema
 type NewCycleFormData = zod.infer<typeof newCycleFormSchema>;
 
+interface Cycle {
+  id: string;
+  task: string;
+  minutesAmount: number;
+}
+
 export function Home() {
+  const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+  // number of seconds elapsed from the current active cycle
+  const [cycleElapsedSeconds, setCycleElapsedSeconds] = useState(0);
+
   const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormSchema), // zod integration with react-hook-form
     defaultValues: {
@@ -38,8 +50,30 @@ export function Home() {
   const task = watch('task');
   const isSubmitDisabled = !task;
 
-  function handleCreateNewCycle(data: NewCycleFormData) {
-    console.log('Data: ', data);
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
+
+  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
+  const remainingSeconds = activeCycle ? totalSeconds - cycleElapsedSeconds : 0;
+
+  // convert remaining seconds to minutes and seconds
+  const minutesAmount = Math.floor(remainingSeconds / 60);
+  const secondsAmount = remainingSeconds % 60;
+
+  // format accordingly to display with additional zeros
+  const minutes = String(minutesAmount).padStart(2, '0');
+  const seconds = String(secondsAmount).padStart(2, '0');
+
+  function handleCreateNewCycle({ task, minutesAmount }: NewCycleFormData) {
+    const id = String(new Date().getTime());
+    const newCycle: Cycle = {
+      id,
+      task,
+      minutesAmount,
+    };
+
+    setCycles((state) => [...state, newCycle]);
+    setActiveCycleId(id);
+
     // this will reset the form fields to their defaultValues
     reset();
   }
@@ -77,11 +111,11 @@ export function Home() {
         </FormContainer>
 
         <CountdownContainer>
-          <span>0</span>
-          <span>0</span>
+          <span>{minutes[0]}</span>
+          <span>{minutes[1]}</span>
           <Separator>:</Separator>
-          <span>0</span>
-          <span>0</span>
+          <span>{seconds[0]}</span>
+          <span>{seconds[1]}</span>
         </CountdownContainer>
 
         <StartCountdownButton type="submit" disabled={isSubmitDisabled}>
