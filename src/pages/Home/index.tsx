@@ -22,17 +22,26 @@ const newCycleFormSchema = zod.object({
     .max(60, 'Cycle needs to be less than 60 minutes'),
 });
 
+// infer types given the schema
+type NewCycleFormData = zod.infer<typeof newCycleFormSchema>;
+
 export function Home() {
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormSchema), // zod integration with react-hook-form
+    defaultValues: {
+      task: '',
+      minutesAmount: 0,
+    },
   });
 
   // start watching the task input
   const task = watch('task');
   const isSubmitDisabled = !task;
 
-  function handleCreateNewCycle(data: any) {
+  function handleCreateNewCycle(data: NewCycleFormData) {
     console.log('Data: ', data);
+    // this will reset the form fields to their defaultValues
+    reset();
   }
 
   return (
