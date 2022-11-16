@@ -49,17 +49,24 @@ export function Home() {
   });
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
-
+  // Start countdown when there's an active cycle
   useEffect(() => {
+    let interval: number;
+
     // initialise a counter if there's an active cycle
     if (activeCycle) {
-      setInterval(() => {
+      interval = setInterval(() => {
         // difference in seconds from now to cycle start date is basically the elapsed seconds
         setCycleElapsedSeconds(
           differenceInSeconds(new Date(), activeCycle.startDate),
         );
       }, 1000);
     }
+
+    // to be called when activeCycle value changes but before activeCycle receives the new value
+    return () => {
+      clearInterval(interval);
+    };
   }, [activeCycle]);
 
   // start watching the task input
@@ -76,6 +83,14 @@ export function Home() {
   // format accordingly to display with additional zeros
   const minutes = String(minutesAmount).padStart(2, '0');
   const seconds = String(secondsAmount).padStart(2, '0');
+  // update document title when minutes/seconds change
+  useEffect(() => {
+    if (activeCycle) {
+      document.title = `${minutes}:${seconds}`;
+    }
+  }, [minutes, seconds, activeCycle]);
+
+  console.log('render');
 
   function handleCreateNewCycle({ task, minutesAmount }: NewCycleFormData) {
     const id = String(new Date().getTime());
@@ -88,6 +103,7 @@ export function Home() {
 
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(id);
+    setCycleElapsedSeconds(0);
 
     // this will reset the form fields to their defaultValues
     reset();
