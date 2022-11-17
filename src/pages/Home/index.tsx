@@ -1,5 +1,8 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import { HandPalm, Play } from 'phosphor-react';
+import * as zod from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, FormProvider } from 'react-hook-form';
 
 import { NewCycleForm } from './components/NewCycleForm';
 import { Countdown } from './components/Countdown';
@@ -18,23 +21,46 @@ interface Cycle {
 interface CyclesContextType {
   activeCycle: Cycle | undefined;
   activeCycleId: string | null;
+  cycleElapsedSeconds: number;
   markActiveCycleAsCompleted: () => void;
+  setSecondsPassed: (seconds: number) => void;
 }
 
 export const CyclesContext = createContext({} as CyclesContextType);
 
+// form schema
+const newCycleFormSchema = zod.object({
+  task: zod.string().min(1, 'Provide the task name'),
+  minutesAmount: zod
+    .number()
+    .min(5, 'Cycle needs to be at least 5 minutes')
+    .max(60, 'Cycle needs to be less than 60 minutes'),
+});
+
+// infer types given the schema
+type NewCycleFormData = zod.infer<typeof newCycleFormSchema>;
+
 export function Home() {
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+  // number of seconds elapsed from the current active cycle
+  const [cycleElapsedSeconds, setCycleElapsedSeconds] = useState(0);
+
+  const cycleForm = useForm<NewCycleFormData>({
+    resolver: zodResolver(newCycleFormSchema), // zod integration with react-hook-form
+    defaultValues: {
+      task: '',
+      minutesAmount: 0,
+    },
+  });
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
-  // update document title when minutes/seconds change
-  useEffect(() => {
-    if (activeCycle) {
-      document.title = `${minutes}:${seconds}`;
-    }
-  }, [minutes, seconds, activeCycle]);
+  const { watch, handleSubmit, reset } = cycleForm;
+
+  // start watching the task input
+  const task = watch('task');
+  const isSubmitDisabled = !task;
 
   function handleCreateNewCycle({ task, minutesAmount }: NewCycleFormData) {
     const id = String(new Date().getTime());
@@ -86,13 +112,25 @@ export function Home() {
     );
   }
 
+  function setSecondsPassed(seconds: number) {
+    setCycleElapsedSeconds(seconds);
+  }
+
   return (
     <Container>
       <form onSubmit={handleSubmit(handleCreateNewCycle)}>
         <CyclesContext.Provider
-          value={{ activeCycle, activeCycleId, markActiveCycleAsCompleted }}
+          value={{
+            activeCycle,
+            activeCycleId,
+            markActiveCycleAsCompleted,
+            cycleElapsedSeconds,
+            setSecondsPassed,
+          }}
         >
-          <NewCycleForm />
+          <FormProvider {...cycleForm}>
+            <NewCycleForm />
+          </FormProvider>
           <Countdown />
         </CyclesContext.Provider>
 
