@@ -12,8 +12,6 @@ export function NewCycleForm({ onTaskInputChanged }: NewCycleFormProps) {
   const { activeCycle } = useContext(CyclesContext);
   const { register } = useFormContext();
 
-  // start watching the task input
-
   return (
     <FormContainer>
       <label htmlFor="task">I&apos;m going to work on</label>

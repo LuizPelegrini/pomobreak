@@ -53,9 +53,6 @@ export function CyclesContextProvider({
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(id);
     setCycleElapsedSeconds(0);
-
-    // this will reset the form fields to their defaultValues
-    // reset();
   }
 
   function interruptActiveCycle() {

@@ -35,11 +35,17 @@ export function Home() {
     },
   });
 
-  const { handleSubmit /* reset */ } = cycleForm;
+  const { handleSubmit, reset } = cycleForm;
+
+  function handleCreateNewCycle(data: NewCycleFormData) {
+    createNewCycle(data);
+    // this will reset the form fields to their defaultValues
+    reset();
+  }
 
   return (
     <Container>
-      <form onSubmit={handleSubmit(createNewCycle)}>
+      <form onSubmit={handleSubmit(handleCreateNewCycle)}>
         <FormProvider {...cycleForm}>
           <NewCycleForm
             onTaskInputChanged={(task) => setIsSubmitDisabled(!task)}
