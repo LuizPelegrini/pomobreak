@@ -1,8 +1,8 @@
 import { FormContainer, MinutesAmountInput, TaskInput } from './styles';
 
 import { useContext } from 'react';
-import { CyclesContext } from '../..';
 import { useFormContext } from 'react-hook-form';
+import { CyclesContext } from '../../../../contexts/CyclesContext';
 
 interface NewCycleFormProps {
   onTaskInputChanged: (task: string) => void;
@@ -13,12 +13,6 @@ export function NewCycleForm({ onTaskInputChanged }: NewCycleFormProps) {
   const { register } = useFormContext();
 
   // start watching the task input
-  const taskFormRegister = register('task', {
-    onChange(event) {
-      const task = event.target.value as string;
-      onTaskInputChanged(task);
-    },
-  });
 
   return (
     <FormContainer>
@@ -29,7 +23,12 @@ export function NewCycleForm({ onTaskInputChanged }: NewCycleFormProps) {
         placeholder="Give a name to your project"
         list="task-suggestions"
         disabled={!!activeCycle}
-        {...taskFormRegister}
+        {...register('task', {
+          onChange(event) {
+            const task = event.target.value as string;
+            onTaskInputChanged(task);
+          },
+        })}
       />
       <datalist id="task-suggestions">
         <option value="Project 1" />
