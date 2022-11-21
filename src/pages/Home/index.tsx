@@ -45,6 +45,7 @@ export function Home() {
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
   // number of seconds elapsed from the current active cycle
   const [cycleElapsedSeconds, setCycleElapsedSeconds] = useState(0);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const cycleForm = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormSchema), // zod integration with react-hook-form
@@ -56,11 +57,7 @@ export function Home() {
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
-  const { watch, handleSubmit, reset } = cycleForm;
-
-  // start watching the task input
-  const task = watch('task');
-  const isSubmitDisabled = !task;
+  const { handleSubmit, reset } = cycleForm;
 
   function handleCreateNewCycle({ task, minutesAmount }: NewCycleFormData) {
     const id = String(new Date().getTime());
@@ -129,7 +126,9 @@ export function Home() {
           }}
         >
           <FormProvider {...cycleForm}>
-            <NewCycleForm />
+            <NewCycleForm
+              onTaskInputChanged={(task) => setIsSubmitDisabled(!task)}
+            />
           </FormProvider>
           <Countdown />
         </CyclesContext.Provider>
