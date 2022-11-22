@@ -34,7 +34,7 @@ export function Countdown() {
       interval = setInterval(() => {
         const secondsElapsed = differenceInSeconds(
           new Date(),
-          activeCycle.startDate,
+          new Date(activeCycle.startDate), // converts to a Date, as startDate is a string when reading from localStorage
         );
 
         // if elapsed seconds reaches total seconds amount, then the cycle is completed
