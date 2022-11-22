@@ -1,4 +1,4 @@
-import { ActionTypes, Cycle } from './cycles';
+import { ActionTypes, Cycle } from './reducer';
 
 interface CreateNewCycleActionProps {
   type: ActionTypes.CREATE_NEW_CYCLE;

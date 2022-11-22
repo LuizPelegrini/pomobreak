@@ -3,8 +3,8 @@ import {
   completeActiveCycleAction,
   createNewCycleAction,
   interruptActiveCycleAction,
-} from '../reducers/cycles/reducer/action';
-import { Cycle, cyclesReducer } from '../reducers/cycles/reducer/cycles';
+} from '../reducers/cycles/action';
+import { Cycle, cyclesReducer } from '../reducers/cycles/reducer';
 
 interface CreateCycleData {
   task: string;
