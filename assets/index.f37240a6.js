@@ -279,7 +279,7 @@ Error generating stack: `+o.message+`
       }
     }
   }
-`,ux="/pomobreak/assets/logo.45e013d3.svg";function cx(){return pe(sx,{children:[S("img",{src:ux,alt:""}),pe("nav",{children:[S(mp,{to:"/",end:!0,title:"Timer",children:S(Kw,{size:24})}),S(mp,{to:"/history",end:!0,title:"History",children:S(Qw,{size:24})})]})]})}const dx=vt.div`
+`,ux="/pomobreak/assets/logo.45e013d3.svg";function cx(){return pe(sx,{children:[S("img",{src:ux,alt:""}),pe("nav",{children:[S(mp,{to:"/pomobreak",end:!0,title:"Timer",children:S(Kw,{size:24})}),S(mp,{to:"/pomobreak/history",end:!0,title:"History",children:S(Qw,{size:24})})]})]})}const dx=vt.div`
   max-width: 74rem;
   height: calc(100vh - 10rem);
   margin: 5rem auto;
