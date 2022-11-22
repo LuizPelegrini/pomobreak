@@ -9,10 +9,10 @@ export function Header() {
     <Container>
       <img src={logo} alt="" />
       <nav>
-        <NavLink to="/" end title="Timer">
+        <NavLink to="/pomobreak" end title="Timer">
           <Timer size={24} />
         </NavLink>
-        <NavLink to="/history" end title="History">
+        <NavLink to="/pomobreak/history" end title="History">
           <Scroll size={24} />
         </NavLink>
       </nav>

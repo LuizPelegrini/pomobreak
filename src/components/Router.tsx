@@ -5,15 +5,15 @@ import { DefaultLayout } from '../layouts/DefaultLayout';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: 'pomobreak',
     element: <DefaultLayout />,
     children: [
       {
-        path: '/',
+        path: '/pomobreak/',
         element: <Home />,
       },
       {
-        path: '/history',
+        path: '/pomobreak/history/',
         element: <History />,
       },
     ],

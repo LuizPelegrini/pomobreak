@@ -6,7 +6,11 @@ set -e
 # build
 npm run build
 
+cp ./404.html dist
+
 cd dist
+
+echo > .nojekyll
 
 git init
 git checkout -B main
